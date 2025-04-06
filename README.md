@@ -88,7 +88,7 @@ Os seguintes dados são armazenados:
 1. Clone o repositório:
 
    ```bash
-   git clone https://github.com/seu-usuario/GangSheeter.git
+   git clone https://github.com/henrique-starfusion/GangSheeter.git
    cd GangSheeter
    ```
 
