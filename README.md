@@ -108,12 +108,12 @@ Os seguintes dados são armazenados:
 
 ## 🗂️ Roadmap
 
-- [ X ] Abrir multiplas imagens
-- [ X ] Lista de imagens abertas com quantidade de cópias e exluir imagem
-- [ X ] Editor visual com arrastar e rotacionar
-- [ X ] Salvar arquivo TIFF
-- [ X ] Gerar Arquivo de Impressão
-- [ X ] Importar várias Imagens
+- [X] Abrir multiplas imagens
+- [X] Lista de imagens abertas com quantidade de cópias e exluir imagem
+- [X] Editor visual com arrastar e rotacionar
+- [X] Salvar arquivo TIFF
+- [X] Gerar Arquivo de Impressão
+- [X] Importar várias Imagens
 - [ ] Arrastar e Solvar Imagens
 - [ ] Reorganizar Imagens
 - [ ] Tela de Configuração
