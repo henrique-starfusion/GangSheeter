@@ -1,82 +1,141 @@
-Crie um sistema desktop em WPF para geração de folhas de impressão DTF com os seguintes requisitos:
 
-Nome do sistema GangSheeter
+# 🖨️ GangSheeter
 
-Nome da classe de imagem da Lista de imagens ImageItem
-Nome da classe de imagem da folha ImageSheet
-Nome da classe de geração da folha Sheet
+**GangSheeter** é um sistema desktop em WPF (.NET 9) voltado para gráficas e profissionais de impressão, que permite gerar folhas DTF otimizadas com base em imagens carregadas e um algoritmo inteligente de distribuição utilizando **ML.NET**.
 
-Todas as classes devem estar em ingles e o sistema deve estar em pt-BR
+---
 
-O sistema deve tem uma interface clean e de fácil utilização.
+## 🧰 Tecnologias Utilizadas
 
-Linguagem: C#
-Framework: .NET 9
+- [.NET 9](https://dotnet.microsoft.com/)
+- [WPF (MVVM)](https://learn.microsoft.com/en-us/dotnet/desktop/wpf/)
+- [Entity Framework Core](https://learn.microsoft.com/en-us/ef/)
+- [SQLite](https://www.sqlite.org/index.html)
+- [ML.NET](https://dotnet.microsoft.com/en-us/apps/machinelearning-ai/ml-dotnet)
+- [MediatR](https://github.com/jbogard/MediatR)
 
-Tecnologias adicionais:
-SQLite (persistência de dados)
-MediatR (mediador de mensagens/eventos)
-ML.NET (machine learning)
+---
 
-1. Upload e Gerenciamento de Imagens
-O sistema deve permitir que o usuário carregue múltiplas imagens em uma lista interativa. Cada item da lista deve conter:
-Miniatura da imagem.
-Campo editável para definir a quantidade de cópias.
-Dimensões da imagem (largura e altura em centímetros).
-Resolução da imagem (em DPI).
-Botão para excluir a imagem da lista.
+## 📦 Estrutura do Projeto
 
-2. Geração da Folha de Impressão
-A folha de impressão deve ter:
-Largura fixa de 58 cm.
-Altura variável, com limite máximo de 15 metros (1500 cm).
+```
+GangSheeter.sln
+│
+├── GangSheeter.App           -> Interface WPF e camada de apresentação
+├── GangSheeter.Domain        -> Entidades e regras de domínio
+├── GangSheeter.Application   -> Comandos, Queries, Handlers (MediatR)
+├── GangSheeter.Infrastructure-> Banco de dados, ML.NET, persistência
+```
 
-A distribuição das imagens deve:
-Aproveitar ao máximo a largura disponível da folha.
-Respeitar espaçamento mínimo de 1 cm e máximo de 5 cm entre as imagens.
-Ser feita por um algoritmo de machine learning com ML.NET, que deve aprender com os layouts anteriores para melhorar continuamente a eficiência da distribuição.
+---
 
-3. Interação com a Folha
-A visualização da folha de impressão deve permitir:
-Movimentar e rotacionar imagens livremente.
-Zoom in/out para melhor visualização.
-Exibir um fundo quadriculado (checkerboard) semelhante ao do Photoshop para facilitar a visualização de áreas transparentes.
+## ✨ Funcionalidades
 
-4. Funcionalidades Principais
-Botão "Gerar Folha"
-Gera uma prévia da folha de impressão, distribuindo as imagens conforme os critérios definidos.
-Ao gerar a folha, o sistema deve automaticamente acionar a funcionalidade de reorganização inteligente.
+### 🖼️ Gerenciamento de Imagens
 
-Botão "Reorganizar"
-Utiliza um modelo de machine learning (ML.NET) para reorganizar as imagens de forma diferente das tentativas anteriores.
-O sistema deve registrar as distribuições anteriores para evitar repetições e aprimorar o aprendizado.
+- Upload múltiplo de imagens
+- Miniaturas interativas
+- Edição de cópias, dimensões (cm) e resolução (DPI)
+- Remoção individual
 
-Botão "Imprimir"
-Gera um arquivo TIFF único, contendo:
-As imagens organizadas conforme a disposição final.
-Fundo transparente.
-Compactação LZW.
-Resolução de 300 DPI.
-Esse arquivo será utilizado para a impressão final da folha.
-Os dados de distribuição gerados devem ser armazenados para alimentar o algoritmo de aprendizado e otimizar as futuras gerações.
+### 📄 Geração de Folha de Impressão
 
-5. Tela de Configurações
-Deve conter os seguintes parâmetros configuráveis:
-Largura da folha (em cm).
-Altura máxima e mínima da folha (em cm).
-Resolução de exportação (em DPI).
-Tipo de compactação do arquivo TIFF.
-Essas configurações devem ser armazenadas no banco SQLite e utilizadas como padrão nas próximas sessões, podendo ser alteradas a qualquer momento.
+- Largura fixa de **58 cm**
+- Altura dinâmica (máximo de **1500 cm**)
+- Distribuição inteligente com algoritmo de ML.NET
+- Respeito ao espaçamento mínimo/máximo (1 cm a 5 cm)
 
-6. Banco de Dados
-O sistema deve utilizar SQLite para persistência dos seguintes dados:
-Configurações do sistema.
-Histórico de folhas geradas.
-Dados de aprendizado para o algoritmo de distribuição:
-Layouts anteriores.
-Tempo de geração.
-Eficiência do uso de espaço.
-Quantidade de cópias por imagem.
-Parâmetros de organização aplicados.
+### 🧠 Aprendizado de Máquina
 
-O objeto da lista de imagens será o nome de ImageItem e as imagens da folha terá o nome de ImageSheet o nome da folha de impressão será sheet
+- O algoritmo aprende com distribuições anteriores
+- Otimização contínua do aproveitamento de espaço
+
+### 🖱️ Interação com a Folha
+
+- Mover e rotacionar imagens manualmente
+- Zoom e navegação livre
+- Fundo quadriculado (checkerboard) estilo Photoshop
+
+### 📤 Exportação TIFF
+
+- Arquivo final gerado com:
+  - Fundo transparente
+  - Compactação LZW
+  - Resolução de 300 DPI
+
+### ⚙️ Configurações
+
+- Largura e altura da folha (mínima/máxima)
+- DPI de exportação
+- Tipo de compactação TIFF
+- Persistência via SQLite
+
+---
+
+## 💾 Banco de Dados (SQLite)
+
+Os seguintes dados são armazenados:
+
+- Configurações do sistema
+- Histórico de folhas geradas
+- Imagens e suas configurações
+- Dados de aprendizado para o algoritmo ML
+
+---
+
+## 🚀 Como Executar
+
+1. Clone o repositório:
+
+   ```bash
+   git clone https://github.com/seu-usuario/GangSheeter.git
+   cd GangSheeter
+   ```
+
+2. Restaure os pacotes:
+
+   ```bash
+   dotnet restore
+   ```
+
+3. Execute o projeto:
+
+   ```bash
+   dotnet run --project GangSheeter.App
+   ```
+
+---
+
+## 🗂️ Roadmap
+
+- [ X ] Abrir multiplas imagens
+- [ X ] Lista de imagens abertas com quantidade de cópias e exluir imagem
+- [ X ] Editor visual com arrastar e rotacionar
+- [ X ] Salvar arquivo TIFF
+- [ X ] Gerar Arquivo de Impressão
+- [ X ] Importar várias Imagens
+- [ ] Arrastar e Solvar Imagens
+- [ ] Reorganizar Imagens
+- [ ] Tela de Configuração
+- [ ] Aplicar Camada Spot
+- [ ] Criar arquivo RIP
+- [ ] Multi idiomas
+- [ ] Abrir todas as imagens de uma pasta
+- [ ] Editar imagem da lista
+- [ ] Alterar tamanho da imagem
+- [ ] Alterar resolução da imagem
+- [ ] Remover fundo da imagem
+
+---
+
+## 📃 Licença
+
+Distribuído sob a licença MIT. Veja `LICENSE` para mais detalhes.
+
+---
+
+## 🙌 Contribuições
+
+Contribuições são bem-vindas! Abra uma issue ou envie um pull request. 😉
+
+---
