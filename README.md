@@ -16,27 +16,17 @@
 
 ---
 
-## 📦 Estrutura do Projeto
-
-```
-GangSheeter.sln
-│
-├── GangSheeter.App           -> Interface WPF e camada de apresentação
-├── GangSheeter.Domain        -> Entidades e regras de domínio
-├── GangSheeter.Application   -> Comandos, Queries, Handlers (MediatR)
-├── GangSheeter.Infrastructure-> Banco de dados, ML.NET, persistência
-```
-
----
-
 ## ✨ Funcionalidades
 
-### 🖼️ Gerenciamento de Imagens
+### 🖼️ Lista de Imagens
 
 - Upload múltiplo de imagens
 - Miniaturas interativas
 - Edição de cópias, dimensões (cm) e resolução (DPI)
-- Remoção individual
+- Exclusão de imagens da lista
+- Exibição de informações detalhadas (nome, dimensões, DPI)
+- Campo quantidade de cópias editável
+- Funcionalidade de arrastar e soltar (drag and drop) para adicionar imagens
 
 ### 📄 Geração de Folha de Impressão
 
@@ -44,19 +34,17 @@ GangSheeter.sln
 - Altura dinâmica (máximo de **1500 cm**)
 - Distribuição inteligente com algoritmo de ML.NET
 - Respeito ao espaçamento mínimo/máximo (1 cm a 5 cm)
-
-### 🧠 Aprendizado de Máquina
-
-- O algoritmo aprende com distribuições anteriores
-- Otimização contínua do aproveitamento de espaço
+- Margem de 0,5 cm para cada lado
+- Ao montar a folha de impressão, repetir a imagem com base na quantidade de cópias
 
 ### 🖱️ Interação com a Folha
 
 - Mover e rotacionar imagens manualmente
 - Zoom e navegação livre
 - Fundo quadriculado (checkerboard) estilo Photoshop
+- Exclusão de imagens da folha
 
-### 📤 Exportação TIFF
+### 📤 Exportação em TIFF
 
 - Arquivo final gerado com:
   - Fundo transparente
@@ -70,6 +58,11 @@ GangSheeter.sln
 - Tipo de compactação TIFF
 - Persistência via SQLite
 
+### 🧠 Aprendizado de Máquina
+
+- O algoritmo aprende com distribuições anteriores
+- Otimização contínua do aproveitamento de espaço
+
 ---
 
 ## 💾 Banco de Dados (SQLite)
@@ -82,6 +75,10 @@ Os seguintes dados são armazenados:
 - Dados de aprendizado para o algoritmo ML
 
 ---
+
+## Interface
+
+![Interface do GangSheeter](Interface.png)
 
 ## 🚀 Como Executar
 
@@ -108,12 +105,12 @@ Os seguintes dados são armazenados:
 
 ## 🗂️ Roadmap
 
-- [X] Abrir multiplas imagens
-- [X] Lista de imagens abertas com quantidade de cópias e exluir imagem
-- [X] Editor visual com arrastar e rotacionar
-- [X] Salvar arquivo TIFF
-- [X] Gerar Arquivo de Impressão
-- [X] Importar várias Imagens
+- [ ] Abrir multiplas imagens
+- [ ] Lista de imagens abertas com quantidade de cópias e exluir imagem
+- [ ] Editor visual com arrastar e rotacionar
+- [ ] Salvar arquivo TIFF
+- [ ] Gerar Arquivo de Impressão
+- [ ] Importar várias Imagens
 - [ ] Arrastar e Solvar Imagens
 - [ ] Reorganizar Imagens
 - [ ] Tela de Configuração
@@ -137,5 +134,11 @@ Distribuído sob a licença MIT. Veja `LICENSE` para mais detalhes.
 ## 🙌 Contribuições
 
 Contribuições são bem-vindas! Abra uma issue ou envie um pull request. 😉
+
+---
+
+Nome: Henrique Rodrigues
+Empresa: StarFusion
+Site: www.starfusion.com.br
 
 ---
