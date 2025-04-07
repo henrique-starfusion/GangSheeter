@@ -1,42 +1,55 @@
 using System.Windows;
-using Microsoft.Win32;
-using GangSheeter.ViewModels;
-using System.IO;
-using System.Drawing;
 
 namespace GangSheeter.Views
 {
     public partial class MainWindow : Window
     {
-        private ImageViewModel _viewModel;
-
         public MainWindow()
         {
             InitializeComponent();
-            _viewModel = new ImageViewModel();
-            DataContext = _viewModel;
         }
 
-        private void UploadImage_Click(object sender, RoutedEventArgs e)
+        private void Open_Click(object sender, RoutedEventArgs e)
         {
-            var openFileDialog = new OpenFileDialog
-            {
-                Multiselect = true,
-                Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp"
-            };
+            // Logic to open images
+            StatusText.Text = "Loading images...";
+            // Simulate loading images
+            // After loading images, update the status
+            StatusText.Text = "Images loaded successfully.";
+        }
 
-            if (openFileDialog.ShowDialog() == true)
-            {
-                foreach (var filePath in openFileDialog.FileNames)
-                {
-                    using (var image = Image.FromFile(filePath))
-                    {
-                        double width = image.Width / 100.0; // Convert pixels to centimeters
-                        double height = image.Height / 100.0; // Convert pixels to centimeters
-                        _viewModel.AddImage(filePath, 1, width, height, 300); // Example values
-                    }
-                }
-            }
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            // Logic to save images
+            StatusText.Text = "Saving images...";
+            // Simulate saving images
+            // After saving images, update the status
+            StatusText.Text = "Images saved successfully.";
+        }
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void Undo_Click(object sender, RoutedEventArgs e)
+        {
+            // Logic for undo
+        }
+
+        private void Redo_Click(object sender, RoutedEventArgs e)
+        {
+            // Logic for redo
+        }
+
+        private void ToggleStatusBar_Click(object sender, RoutedEventArgs e)
+        {
+            // Logic to toggle status bar visibility
+        }
+
+        private void About_Click(object sender, RoutedEventArgs e)
+        {
+            // Logic to show about information
         }
     }
 }
