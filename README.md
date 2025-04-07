@@ -78,7 +78,7 @@ Os seguintes dados são armazenados:
 
 ## Interface
 
-![Interface do GangSheeter](Interface.png)
+![Interface do GangSheeter](https://github.com/henrique-starfusion/GangSheeter/blob/develop/interface.png?raw=true)
 
 ## 🚀 Como Executar
 
