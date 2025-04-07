@@ -1,0 +1,32 @@
+<Window x:Class="GangSheeter.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="GangSheeter" Height="900" Width="1800">
+    <Grid>
+        <ListView Name="ImageListView" ItemsSource="{Binding Images}" Margin="10">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Miniatura" Width="100">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding FilePath}" Width="80" Height="80"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Cópias" Width="50" DisplayMemberBinding="{Binding Copies}"/>
+                    <GridViewColumn Header="Largura (cm)" Width="100" DisplayMemberBinding="{Binding Width}"/>
+                    <GridViewColumn Header="Altura (cm)" Width="100" DisplayMemberBinding="{Binding Height}"/>
+                    <GridViewColumn Header="Resolução (DPI)" Width="100" DisplayMemberBinding="{Binding Resolution}"/>
+                    <GridViewColumn Header="Ações" Width="100">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Remover" Command="{Binding RemoveCommand}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button Content="Carregar Imagem" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10" Width="100" Click="UploadImage_Click"/>
+    </Grid>
+</Window>
