@@ -5,8 +5,9 @@ namespace GangSheeter.Services
 {
     public interface ISheetGeneratorService
     {
-        List<SheetGeneratorService.ImagePlacement> GenerateSheet(IEnumerable<ImageInfo> images);
+        // Updated references from ImagePlacement to ImageSheet
+        List<ImageSheet> GenerateSheet(IEnumerable<ImageInfo> images);
 
-        void ReorganizeSheet(IEnumerable<SheetGeneratorService.ImagePlacement> placements);
+        void ReorganizeSheet(IEnumerable<ImageSheet> placements);
     }
 }

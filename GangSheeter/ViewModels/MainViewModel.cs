@@ -19,7 +19,7 @@ namespace GangSheeter.ViewModels
         private readonly SheetGeneratorService _sheetGenerator;
         private readonly LayoutOptimizerML _mlOptimizer;
         private ImageListViewModel _imageList = null!;
-        private ObservableCollection<SheetGeneratorService.ImagePlacement> _placements = new();
+        private ObservableCollection<ImageSheet> _placements = new();
         private ICommand? _generateSheetCommand;
         private ICommand? _reorganizeSheetCommand;
         private ICommand? _saveCommand;
@@ -44,7 +44,7 @@ namespace GangSheeter.ViewModels
             set => SetField(ref _imageList, value);
         }
 
-        public ObservableCollection<SheetGeneratorService.ImagePlacement> Placements
+        public ObservableCollection<ImageSheet> Placements
         {
             get => _placements;
             set => SetField(ref _placements, value);

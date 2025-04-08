@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GangSheeter.Services;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace GangSheeter.Services
 {
@@ -14,16 +16,7 @@ namespace GangSheeter.Services
         private const double MinSpacingCm = 1.0;
         private const double MaxSpacingCm = 5.0;
         private const double MarginCm = 0.5;
-
-        public class ImagePlacement
-        {
-            public ImageInfo Image { get; set; } = null!;
-            public double X { get; set; }
-            public double Y { get; set; }
-            public double Rotate { get; set; }
-            public bool IsRotated { get; set; }
-        }
-
+        
         private readonly LayoutOptimizerML _mlOptimizer;
 
         public SheetGeneratorService()
@@ -31,18 +24,18 @@ namespace GangSheeter.Services
             _mlOptimizer = new LayoutOptimizerML();
         }
 
-        public List<ImagePlacement> GenerateSheet(IEnumerable<ImageInfo> images)
+        public List<ImageSheet> GenerateSheet(IEnumerable<ImageInfo> images)
         {
             if (images == null)
-                return new List<ImagePlacement>();
+                return new List<ImageSheet>();
 
-            var placements = new List<ImagePlacement>();
+            var placements = new List<ImageSheet>();
 
             foreach (var image in images)
             {
                 for (var i = 0; i < image.Copies; i++)
                 {
-                    var placement = new ImagePlacement
+                    var placement = new ImageSheet
                     {
                         Image = image,
                     };
@@ -55,7 +48,7 @@ namespace GangSheeter.Services
             return placements;
         }
 
-        public void ReorganizeSheet(IEnumerable<ImagePlacement> placements)
+        public void ReorganizeSheet(IEnumerable<ImageSheet> placements)
         {
             _mlOptimizer.OptimizeLayout(placements);
         }

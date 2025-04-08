@@ -9,8 +9,10 @@ namespace GangSheeter.Services
 {
     public class LayoutOptimizerML
     {
+        private const double MinSpacingCm = 1.0; // Define minimum spacing between images
         private readonly MLContext _mlContext;
         private ITransformer _model;
+        private List<ImageSheet> previousLayouts = new List<ImageSheet>(); // Updated reference
 
         public LayoutOptimizerML()
         {
@@ -24,8 +26,11 @@ namespace GangSheeter.Services
             _model = pipeline.Fit(emptyData);
         }
 
-        public void TrainModel(IEnumerable<SheetGeneratorService.ImagePlacement> historicalData)
+        public void TrainModel(IEnumerable<ImageSheet> historicalData) // Updated reference
         {
+            // Log the current layout for future training
+            previousLayouts.AddRange(historicalData);
+
             // Prepare data
             var data = _mlContext.Data.LoadFromEnumerable(historicalData
                 .Select(p => new LayoutData
@@ -49,7 +54,7 @@ namespace GangSheeter.Services
         }
 
         public void OptimizeLayout(
-            IEnumerable<SheetGeneratorService.ImagePlacement> placements,
+            IEnumerable<ImageSheet> placements, // Updated reference
             double sheetWidth = 58.0,
             double maxSheetHeight = 1500.0)
         {
@@ -66,8 +71,9 @@ namespace GangSheeter.Services
                     return;
                 }
 
-                double currentY = 0;
-                double currentX = 0;
+                double currentY = 0; // Start at the top of the sheet
+                double currentX = 0; // Start at the left of the sheet
+                double maxRowHeight = 0; // Track the maximum height of the current row
 
                 foreach (var placement in placements)
                 {
@@ -95,19 +101,29 @@ namespace GangSheeter.Services
                     if (width > sheetWidth)
                         shouldRotate = true;
 
+                    // Check if the current image can fit in the current row
+                    if (currentX + width > sheetWidth)
+                    {
+                        // Move to the next row
+                        currentY += maxRowHeight + MinSpacingCm; // Add spacing between rows
+                        currentX = 0; // Reset X position
+                        maxRowHeight = 0; // Reset max row height
+                    }
+
                     placement.X = currentX;
                     placement.Y = currentY;
                     placement.IsRotated = shouldRotate;
 
                     if (shouldRotate)
-                        placement.Rotate = 90;
+                        placement.Angle = 90;
 
                     if (currentY + height > maxSheetHeight)
                     {
                         throw new InvalidOperationException("Exceeded maximum sheet height.");
                     }
 
-                    currentY += height;
+                    currentX += width + MinSpacingCm; // Move X position for the next image
+                    maxRowHeight = Math.Max(maxRowHeight, height); // Update max row height
                 }
             }
             catch (Exception ex)
@@ -126,7 +142,7 @@ namespace GangSheeter.Services
             public float Score { get; set; }
         }
 
-        private float CalculateEfficiencyScore(SheetGeneratorService.ImagePlacement placement)
+        private float CalculateEfficiencyScore(ImageSheet placement) // Updated reference
         {
             // Calculate space utilization efficiency (0-1)
             double usedWidth = placement.X + (placement.IsRotated ? placement.Image.HeightCm : placement.Image.WidthCm);

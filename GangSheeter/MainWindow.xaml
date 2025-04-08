@@ -178,13 +178,9 @@
                                            Height="{Binding Image.HeightCm, Converter={StaticResource CmToPreviewPixelsConverter}}"
                                            RenderTransformOrigin="0.5,0.5">
                                         <Image.RenderTransform>
-                                            <RotateTransform Angle="{Binding IsRotated, Converter={StaticResource BoolToRotationConverter}}"/>
+                                            <RotateTransform Angle="{Binding Angle}"/>
                                         </Image.RenderTransform>
                                     </Image>
-                                    <TextBlock Text="{Binding Image.FileName}" 
-                                             Background="#80FFFFFF"
-                                             Padding="2"
-                                             VerticalAlignment="Bottom"/>
                                 </Grid>
                             </Border>
                         </DataTemplate>
