@@ -1,192 +1,70 @@
-﻿<Window x:Class="GangSheeter.MainWindow"
+﻿<Fluent:RibbonWindow x:Class="GangSheeter.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GangSheeter"
-        xmlns:viewModels="clr-namespace:GangSheeter.ViewModels"
-        xmlns:converters="clr-namespace:GangSheeter.Converters"
+        xmlns:Fluent="urn:fluent-ribbon"
         mc:Ignorable="d"
-        Title="GangSheeter" Height="800" Width="1200">
-    
-    <Window.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <local:BoolToRotationConverter x:Key="BoolToRotationConverter"/>
-        <converters:CmToPreviewPixelsConverter x:Key="CmToPreviewPixelsConverter"/>
-    </Window.Resources>
-    
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        Title="GangSheeter" Height="1000" Width="2000">
+    <DockPanel>
+        <Fluent:Ribbon DockPanel.Dock="Top">
+            <Fluent:Ribbon.Menu>
+                <Fluent:Backstage Header="Menu">
+                </Fluent:Backstage>
+            </Fluent:Ribbon.Menu>
+            
+            <Fluent:RibbonTabItem Header="Home">
+                <Fluent:RibbonGroupBox Header="Imagens">
+                    <Fluent:Button Header="Selecionar Imagens" 
+                                  LargeIcon="assets/select-images.png"
+                                  Click="OnSelectImagesClick"/>
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+        </Fluent:Ribbon>
 
-        <!-- Image List Panel -->
-        <Border Grid.Column="0" BorderBrush="Gray" BorderThickness="0,0,1,0">
-            <DockPanel>
-                <DockPanel>
-                    <StackPanel DockPanel.Dock="Top">
-                        <!-- Add Images button on top -->
-                        <Button Margin="5" Padding="10,5">
-                            <Button.Content>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Add Images" Margin="0,0,5,0"/>
-                                    <TextBlock Text="⌛" Visibility="{Binding ImageList.IsLoadingImages, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                </StackPanel>
-                            </Button.Content>
-                            <Button.Command>
-                                <Binding Path="ImageList.AddImagesCommand"/>
-                            </Button.Command>
-                        </Button>
+        <StatusBar DockPanel.Dock="Bottom" Height="25">
+            <StatusBarItem>
+                <TextBlock Name="StatusText" Text="Ready"/>
+            </StatusBarItem>
+        </StatusBar>
 
-                        <!-- Generate Sheet and Reorganize buttons side by side -->
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-                            <Button Margin="5,5,2.5,5" Padding="10,5" HorizontalAlignment="Stretch">
-                                <Button.Content>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Generate Sheet" Margin="0,0,5,0"/>
-                                        <TextBlock Text="⌛" Visibility="{Binding IsGeneratingSheet, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                    </StackPanel>
-                                </Button.Content>
-                                <Button.Command>
-                                    <Binding Path="GenerateSheetCommand"/>
-                                </Button.Command>
-                            </Button>
-
-                            <Button Margin="2.5,5,5,5" Padding="10,5" HorizontalAlignment="Stretch" IsEnabled="{Binding ImageList.HasImages}">
-                                <Button.Content>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Reorganize Sheet" Margin="0,0,5,0"/>
-                                        <TextBlock Text="⌛" Visibility="{Binding IsReorganizeSheet, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                    </StackPanel>
-                                </Button.Content>
-                                <Button.Command>
-                                    <Binding Path="ReorganizeSheetCommand"/>
-                                </Button.Command>
-                            </Button>
-                        </StackPanel>
-
-                        <!-- Save button below -->
-                        <Button Content="Save" 
-                                Command="{Binding SaveCommand}"
-                                Margin="5"
-                                Padding="10,5"
-                                HorizontalAlignment="Stretch"/>
-                    </StackPanel>
-
-                    <ListView ItemsSource="{Binding ImageList.Images}" SelectedItem="{Binding ImageList.SelectedImage}">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="Preview" Width="100">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Image Source="{Binding FilePath}" Height="60" Stretch="Uniform"/>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Header="Copies" Width="60">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBox Text="{Binding Copies, UpdateSourceTrigger=PropertyChanged}"
-                                                     Width="40"
-                                                     HorizontalAlignment="Left"/>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Header="DPI" Width="60">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding DPI}" VerticalAlignment="Center"/>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Header="Height (cm)" Width="80">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding HeightCm, StringFormat='{}{0:F1}'}" VerticalAlignment="Center"/>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Header="Width (cm)" Width="80">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding WidthCm, StringFormat='{}{0:F1}'}" VerticalAlignment="Center"/>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Header="" Width="50">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Button Content="✕"
-                                                    Command="{Binding DataContext.ImageList.RemoveImageCommand, 
-                                                              RelativeSource={RelativeSource AncestorType=ListView}}"
-                                                    CommandParameter="{Binding}"
-                                                    Padding="5,0"/>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </DockPanel>
-            </DockPanel>
-        </Border>
-
-        <!-- Sheet Preview Area -->
-        <Border Grid.Column="1" Background="#FFEEEEEE">
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                <ItemsControl ItemsSource="{Binding Placements}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <Canvas Width="580" Height="1500">
-                                <Canvas.Background>
-                                    <DrawingBrush TileMode="Tile" Viewport="0,0,16,16" ViewportUnits="Absolute">
-                                        <DrawingBrush.Drawing>
-                                            <DrawingGroup>
-                                                <GeometryDrawing Brush="#FFF0F0F0">
-                                                    <GeometryDrawing.Geometry>
-                                                        <RectangleGeometry Rect="0,0,16,16"/>
-                                                    </GeometryDrawing.Geometry>
-                                                </GeometryDrawing>
-                                                <GeometryDrawing Brush="#FFE0E0E0">
-                                                    <GeometryDrawing.Geometry>
-                                                        <GeometryGroup>
-                                                            <RectangleGeometry Rect="0,0,8,8"/>
-                                                            <RectangleGeometry Rect="8,8,8,8"/>
-                                                        </GeometryGroup>
-                                                    </GeometryDrawing.Geometry>
-                                                </GeometryDrawing>
-                                            </DrawingGroup>
-                                        </DrawingBrush.Drawing>
-                                    </DrawingBrush>
-                                </Canvas.Background>
-                            </Canvas>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemContainerStyle>
-                        <Style TargetType="ContentPresenter">
-                            <Setter Property="Canvas.Left" Value="{Binding X}"/>
-                            <Setter Property="Canvas.Top" Value="{Binding Y}"/>
-                        </Style>
-                    </ItemsControl.ItemContainerStyle>
-                    <ItemsControl.ItemTemplate>
+        <DataGrid Name="ImagesGrid" 
+                  AutoGenerateColumns="False" 
+                  CanUserAddRows="False"
+                  Margin="10">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Image" Width="70">
+                    <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Border BorderBrush="Gray" BorderThickness="1" Margin="2">
-                                <Grid>
-                                    <Image Source="{Binding Image.FilePath}" 
-                                           Width="{Binding Image.WidthCm, Converter={StaticResource CmToPreviewPixelsConverter}}"
-                                           Height="{Binding Image.HeightCm, Converter={StaticResource CmToPreviewPixelsConverter}}"
-                                           RenderTransformOrigin="0.5,0.5">
-                                        <Image.RenderTransform>
-                                            <RotateTransform Angle="{Binding Angle}"/>
-                                        </Image.RenderTransform>
-                                    </Image>
-                                </Grid>
-                            </Border>
+                            <Image Source="{Binding ThumbnailPath}" 
+                                   Width="50" Height="50" 
+                                   Stretch="Uniform"/>
                         </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
-        </Border>
-    </Grid>
-</Window>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Copies" 
+                                  Binding="{Binding Copies}" 
+                                  Width="70"/>
+                <DataGridTextColumn Header="Resolution" 
+                                  Binding="{Binding Resolution}" 
+                                  Width="100"/>
+                <DataGridTextColumn Header="Width" 
+                                  Binding="{Binding Width}" 
+                                  Width="70"/>
+                <DataGridTextColumn Header="Height" 
+                                  Binding="{Binding Height}" 
+                                  Width="70"/>
+                <DataGridTemplateColumn Header="Actions" Width="80">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Delete" 
+                                    Click="OnDeleteImageClick"
+                                    Margin="2"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</Fluent:RibbonWindow>
