@@ -1,144 +1,79 @@
+# GangSheeter
 
-# 🖨️ GangSheeter
-
-**GangSheeter** é um sistema desktop em WPF (.NET 9) voltado para gráficas e profissionais de impressão, que permite gerar folhas DTF otimizadas com base em imagens carregadas e um algoritmo inteligente de distribuição utilizando **ML.NET**.
-
----
-
-## 🧰 Tecnologias Utilizadas
-
-- [.NET 9](https://dotnet.microsoft.com/)
-- [WPF (MVVM)](https://learn.microsoft.com/en-us/dotnet/desktop/wpf/)
-- [Entity Framework Core](https://learn.microsoft.com/en-us/ef/)
-- [SQLite](https://www.sqlite.org/index.html)
-- [ML.NET](https://dotnet.microsoft.com/en-us/apps/machinelearning-ai/ml-dotnet)
-- [MediatR](https://github.com/jbogard/MediatR)
+## Visão Geral
+**GangSheeter** é um sistema desktop desenvolvido em WPF (.NET 9) voltado para gráficas e profissionais de impressão. O software permite gerar folhas DTF otimizadas com base em imagens carregadas e um algoritmo inteligente de distribuição utilizando **ML.NET**.
 
 ---
 
-## ✨ Funcionalidades
-
-### 🖼️ Lista de Imagens
-
-- Upload múltiplo de imagens
-- Miniaturas interativas
-- Edição de cópias, dimensões (cm) e resolução (DPI)
-- Exclusão de imagens da lista
-- Exibição de informações detalhadas (nome, dimensões, DPI)
-- Campo quantidade de cópias editável
-- Funcionalidade de arrastar e soltar (drag and drop) para adicionar imagens
-
-### 📄 Geração de Folha de Impressão
-
-- Largura fixa de **58 cm**
-- Altura dinâmica (máximo de **1500 cm**)
-- Distribuição inteligente com algoritmo de ML.NET
-- Respeito ao espaçamento mínimo/máximo (1 cm a 5 cm)
-- Margem de 0,5 cm para cada lado
-- Ao montar a folha de impressão, repetir a imagem com base na quantidade de cópias
-
-### 🖱️ Interação com a Folha
-
-- Mover e rotacionar imagens manualmente
-- Zoom e navegação livre
-- Fundo quadriculado (checkerboard) estilo Photoshop
-- Exclusão de imagens da folha
-
-### 📤 Exportação em TIFF
-
-- Arquivo final gerado com:
-  - Fundo transparente
-  - Compactação LZW
-  - Resolução de 300 DPI
-
-### ⚙️ Configurações
-
-- Largura e altura da folha (mínima/máxima)
-- DPI de exportação
-- Tipo de compactação TIFF
-- Persistência via SQLite
-
-### 🧠 Aprendizado de Máquina
-
-- O algoritmo aprende com distribuições anteriores
-- Otimização contínua do aproveitamento de espaço
+## Tecnologias Utilizadas
+- **.NET 9**
+- **WPF (MVVM)**
+- **Entity Framework Core**
+- **SQLite**
+- **ML.NET**
+- **MediatR**
 
 ---
 
-## 💾 Banco de Dados (SQLite)
+## Funcionalidades Principais
 
-Os seguintes dados são armazenados:
+### Lista de Imagens
+- **Upload Múltiplo de Imagens:** Permite que o usuário carregue várias imagens de uma vez.
+- **Miniaturas Interativas:** Exibe miniaturas das imagens carregadas para fácil visualização.
+- **Edição de Cópias, Dimensões e Resolução:** O usuário pode editar a quantidade de cópias, dimensões (cm) e resolução (DPI) de cada imagem.
+- **Exclusão de Imagens:** Permite que o usuário remova imagens da lista.
+- **Informações Detalhadas:** Exibe informações como nome, dimensões e DPI das imagens.
 
-- Configurações do sistema
-- Histórico de folhas geradas
-- Imagens e suas configurações
-- Dados de aprendizado para o algoritmo ML
+### Geração de Folha de Impressão
+- **Largura Fixa:** A largura da folha é fixa em 58 cm.
+- **Altura Dinâmica:** A altura é dinâmica, com um máximo de 1500 cm.
+- **Distribuição Inteligente:** Utiliza um algoritmo de ML.NET para otimizar a distribuição das imagens.
+- **Espaçamento e Margens:** Respeita o espaçamento mínimo/máximo (1 cm a 5 cm) e uma margem de 0,5 cm para cada lado.
+
+### Interação com a Folha
+- **Mover e Rotacionar Imagens:** Permite que o usuário mova e rotacione as imagens manualmente.
+- **Zoom e Navegação Livre:** O usuário pode aplicar zoom e navegar livremente pela folha.
+- **Fundo Quadriculado:** Adiciona um fundo quadriculado (checkerboard) estilo Photoshop.
+
+### Exportação em TIFF
+- **Arquivo Final:** Gera um arquivo TIFF com fundo transparente, compactação LZW e resolução de 300 DPI.
+
+### Configurações
+- **Configuração de Largura e Altura:** Permite que o usuário defina a largura e altura da folha (mínima/máxima).
+- **Configuração de DPI e Compactação:** Permite que o usuário configure o DPI de exportação e o tipo de compactação TIFF.
+- **Persistência via SQLite:** Armazena as configurações no banco de dados SQLite.
+
+### Aprendizado de Máquina
+- **Otimização Contínua:** O algoritmo aprende com distribuições anteriores para otimizar o aproveitamento de espaço.
 
 ---
 
-## Interface
+## Banco de Dados
+O GangSheeter utiliza SQLite para armazenar:
+- Configurações do sistema.
+- Histórico de folhas geradas.
+- Imagens e suas configurações.
+- Dados de aprendizado para o algoritmo ML.
+
+---
+
+## Interface do Usuário
+A interface do GangSheeter é projetada para ser amigável e intuitiva, permitindo que os usuários naveguem facilmente pelas funcionalidades do software.
 
 ![Interface do GangSheeter](https://github.com/henrique-starfusion/GangSheeter/blob/develop/interface.png?raw=true)
 
-## 🚀 Como Executar
+---
 
+## Como Executar
 1. Clone o repositório:
-
    ```bash
    git clone https://github.com/henrique-starfusion/GangSheeter.git
    cd GangSheeter
-   ```
 
 2. Restaure os pacotes:
-
    ```bash
    dotnet restore
-   ```
 
 3. Execute o projeto:
-
    ```bash
-   dotnet run --project GangSheeter.App
-   ```
-
----
-
-## 🗂️ Roadmap
-
-- [ ] Abrir multiplas imagens
-- [ ] Lista de imagens abertas com quantidade de cópias e exluir imagem
-- [ ] Editor visual com arrastar e rotacionar
-- [ ] Salvar arquivo TIFF
-- [ ] Gerar Arquivo de Impressão
-- [ ] Importar várias Imagens
-- [ ] Arrastar e Solvar Imagens
-- [ ] Reorganizar Imagens
-- [ ] Tela de Configuração
-- [ ] Aplicar Camada Spot
-- [ ] Criar arquivo RIP
-- [ ] Multi idiomas
-- [ ] Abrir todas as imagens de uma pasta
-- [ ] Editar imagem da lista
-- [ ] Alterar tamanho da imagem
-- [ ] Alterar resolução da imagem
-- [ ] Remover fundo da imagem
-
----
-
-## 📃 Licença
-
-Distribuído sob a licença MIT. Veja `LICENSE` para mais detalhes.
-
----
-
-## 🙌 Contribuições
-
-Contribuições são bem-vindas! Abra uma issue ou envie um pull request. 😉
-
----
-
-Nome: Henrique Rodrigues
-Empresa: StarFusion
-Site: www.starfusion.com.br
-
----
+   dotnet run --project GangSheeter

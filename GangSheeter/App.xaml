@@ -1,0 +1,10 @@
+﻿<Application x:Class="GangSheeter.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:GangSheeter"
+             xmlns:viewModels="clr-namespace:GangSheeter.ViewModels"
+             xmlns:converters="clr-namespace:GangSheeter.Converters">
+    <Application.Resources>
+        <converters:BoolToRotationConverter x:Key="BoolToRotationConverter"/>
+    </Application.Resources>
+</Application>
