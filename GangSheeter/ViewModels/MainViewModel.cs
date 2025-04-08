@@ -17,16 +17,25 @@ namespace GangSheeter.ViewModels
     public class MainViewModel : INotifyPropertyChanged
     {
         private readonly SheetGeneratorService _sheetGenerator;
+        private readonly LayoutOptimizerML _mlOptimizer;
         private ImageListViewModel _imageList = null!;
         private ObservableCollection<SheetGeneratorService.ImagePlacement> _placements = new();
         private ICommand? _generateSheetCommand;
-        private ICommand? _exportTiffCommand;
+        private ICommand? _reorganizeSheetCommand;
+        private ICommand? _saveCommand;
         private bool _isGeneratingSheet;
-        
+        private bool _isReorganizeSheet;
+
         public bool IsGeneratingSheet
         {
             get => _isGeneratingSheet;
             set => SetField(ref _isGeneratingSheet, value);
+        }
+
+        public bool IsReorganizeSheet
+        {
+            get => _isReorganizeSheet;
+            set => SetField(ref _isReorganizeSheet, value);
         }
 
         public ImageListViewModel ImageList
@@ -42,17 +51,24 @@ namespace GangSheeter.ViewModels
         }
 
         public ICommand GenerateSheetCommand => _generateSheetCommand ??= new RelayCommand(GenerateSheet, CanGenerateSheet);
-        public ICommand ExportTiffCommand => _exportTiffCommand ??= new RelayCommand(ExportTiff, CanExportTiff);
+        public ICommand ReorfanizeSheetCommand => _reorganizeSheetCommand ??= new RelayCommand(ReorganizeSheet, CanReorganizeSheet);
+        public ICommand SaveCommand => _saveCommand ??= new RelayCommand(Save, CanSave);
 
-        public MainViewModel(ImageListViewModel imageList, SheetGeneratorService sheetGenerator)
+        public MainViewModel(ImageListViewModel imageList, SheetGeneratorService sheetGenerator, LayoutOptimizerML mlOptimizer)
         {
             _imageList = imageList;
             _sheetGenerator = sheetGenerator;
+            _mlOptimizer = mlOptimizer;
         }
 
         private bool CanGenerateSheet()
         {
             return ImageList.Images.Any();
+        }
+
+        private bool CanReorganizeSheet()
+        {
+            return Placements.Any();
         }
 
         private async void GenerateSheet()
@@ -66,10 +82,14 @@ namespace GangSheeter.ViewModels
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         Placements.Clear();
-                        foreach (var placement in placements)
+                        if (placements != null)
                         {
-                            Placements.Add(placement);
+                            foreach (var placement in placements.Where(p => p?.Image != null))
+                            {
+                                Placements.Add(placement);
+                            }
                         }
+                        _sheetGenerator.ReorganizeSheet(Placements);
                     });
                 });
             }
@@ -79,12 +99,32 @@ namespace GangSheeter.ViewModels
             }
         }
 
-        private bool CanExportTiff()
+        private async void ReorganizeSheet()
+        {
+            try
+            {
+                IsReorganizeSheet = true;
+
+                await Task.Run(() =>
+                   {
+                       Application.Current.Dispatcher.Invoke(() =>
+                       {
+                           _sheetGenerator.ReorganizeSheet(Placements);
+                       });
+                   });
+            }
+            finally
+            {
+                IsReorganizeSheet = false;
+            }
+        }
+
+        private bool CanSave()
         {
             return Placements.Any();
         }
 
-        private void ExportTiff()
+        private void Save()
         {
             var dialog = new SaveFileDialog
             {
@@ -100,7 +140,7 @@ namespace GangSheeter.ViewModels
                     var dpi = 300;
                     var width = (int)(58 * dpi / 2.54); // 58cm to pixels at 300 DPI
                     var height = (int)(150 * dpi / 2.54); // 150cm to pixels at 300 DPI
-                    
+
                     var renderTarget = new RenderTargetBitmap(width, height, dpi, dpi, PixelFormats.Pbgra32);
 
                     // Create a DrawingVisual to render the sheet
@@ -119,12 +159,12 @@ namespace GangSheeter.ViewModels
                             var x = placement.X * dpi / 2.54;
                             var y = placement.Y * dpi / 2.54;
                             var transform = new TransformGroup();
-                            
+
                             if (placement.IsRotated)
                             {
-                                transform.Children.Add(new RotateTransform(90, image.PixelWidth/2, image.PixelHeight/2));
+                                transform.Children.Add(new RotateTransform(90, image.PixelWidth / 2, image.PixelHeight / 2));
                             }
-                            
+
                             transform.Children.Add(new TranslateTransform(x, y));
                             context.PushTransform(transform);
                             context.DrawImage(image, new Rect(0, 0, image.PixelWidth, image.PixelHeight));

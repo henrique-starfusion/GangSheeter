@@ -5,11 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GangSheeter"
         xmlns:viewModels="clr-namespace:GangSheeter.ViewModels"
+        xmlns:converters="clr-namespace:GangSheeter.Converters"
         mc:Ignorable="d"
         Title="GangSheeter" Height="800" Width="1200">
     
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <local:BoolToRotationConverter x:Key="BoolToRotationConverter"/>
+        <converters:CmToPreviewPixelsConverter x:Key="CmToPreviewPixelsConverter"/>
     </Window.Resources>
     
     <Grid>
@@ -23,19 +26,22 @@
             <DockPanel>
                 <DockPanel>
                     <StackPanel DockPanel.Dock="Top">
-                        <StackPanel Orientation="Horizontal">
-                            <Button Margin="5" Padding="10,5">
-                                <Button.Content>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Add Images" Margin="0,0,5,0"/>
-                                        <TextBlock Text="⌛" Visibility="{Binding ImageList.IsLoadingImages, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                    </StackPanel>
-                                </Button.Content>
-                                <Button.Command>
-                                    <Binding Path="ImageList.AddImagesCommand"/>
-                                </Button.Command>
-                            </Button>
-                            <Button Margin="5" Padding="10,5">
+                        <!-- Add Images button on top -->
+                        <Button Margin="5" Padding="10,5">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Add Images" Margin="0,0,5,0"/>
+                                    <TextBlock Text="⌛" Visibility="{Binding ImageList.IsLoadingImages, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                </StackPanel>
+                            </Button.Content>
+                            <Button.Command>
+                                <Binding Path="ImageList.AddImagesCommand"/>
+                            </Button.Command>
+                        </Button>
+
+                        <!-- Generate Sheet and Reorganize buttons side by side -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                            <Button Margin="5,5,2.5,5" Padding="10,5" HorizontalAlignment="Stretch">
                                 <Button.Content>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="Generate Sheet" Margin="0,0,5,0"/>
@@ -46,15 +52,29 @@
                                     <Binding Path="GenerateSheetCommand"/>
                                 </Button.Command>
                             </Button>
+
+                            <Button Margin="2.5,5,5,5" Padding="10,5" HorizontalAlignment="Stretch" IsEnabled="{Binding ImageList.HasImages}">
+                                <Button.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Reorganize Sheet" Margin="0,0,5,0"/>
+                                        <TextBlock Text="⌛" Visibility="{Binding IsReorganizeSheet, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                    </StackPanel>
+                                </Button.Content>
+                                <Button.Command>
+                                    <Binding Path="ReorganizeSheetCommand"/>
+                                </Button.Command>
+                            </Button>
                         </StackPanel>
-                        <Button Content="Export TIFF" 
-                                Command="{Binding ExportTiffCommand}"
+
+                        <!-- Save button below -->
+                        <Button Content="Save" 
+                                Command="{Binding SaveCommand}"
                                 Margin="5"
                                 Padding="10,5"
                                 HorizontalAlignment="Stretch"/>
                     </StackPanel>
-                    <ListView ItemsSource="{Binding ImageList.Images}"
-                             SelectedItem="{Binding ImageList.SelectedImage}">
+
+                    <ListView ItemsSource="{Binding ImageList.Images}" SelectedItem="{Binding ImageList.SelectedImage}">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Preview" Width="100">
@@ -154,8 +174,8 @@
                             <Border BorderBrush="Gray" BorderThickness="1" Margin="2">
                                 <Grid>
                                     <Image Source="{Binding Image.FilePath}" 
-                                           Width="{Binding Image.WidthPx}"
-                                           Height="{Binding Image.HeightPx}"
+                                           Width="{Binding Image.WidthCm, Converter={StaticResource CmToPreviewPixelsConverter}}"
+                                           Height="{Binding Image.HeightCm, Converter={StaticResource CmToPreviewPixelsConverter}}"
                                            RenderTransformOrigin="0.5,0.5">
                                         <Image.RenderTransform>
                                             <RotateTransform Angle="{Binding IsRotated, Converter={StaticResource BoolToRotationConverter}}"/>
