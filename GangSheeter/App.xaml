@@ -1,0 +1,30 @@
+<Application x:Class="GangSheeter.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:GangSheeter"
+             xmlns:viewModels="clr-namespace:GangSheeter.ViewModels"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Fluent;component/Themes/Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <viewModels:MainViewModel x:Key="MainViewModel" />
+
+            <!-- Estilo para alinhar números à direita -->
+            <Style x:Key="DataGridCellRightAlign" TargetType="TextBlock">
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="Margin" Value="0,0,5,0"/>
+            </Style>
+
+            <!-- Estilo para editor numérico -->
+            <Style x:Key="DataGridEditingNumericUpDown" TargetType="TextBox">
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="0,0,5,0"/>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

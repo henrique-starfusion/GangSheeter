@@ -1,0 +1,172 @@
+<Fluent:RibbonWindow x:Class="GangSheeter.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Fluent="urn:fluent-ribbon"
+        xmlns:local="clr-namespace:GangSheeter"
+        xmlns:zoom="http://schemas.abtsoftware.co.uk/zoom"
+        Title="GangSheeter" Height="800" Width="1800">
+
+    <DockPanel>
+
+        <Fluent:Ribbon DockPanel.Dock="Top">
+            <!-- Aba Principal -->
+            <Fluent:RibbonTabItem Header="Arquivo">
+                <Fluent:RibbonGroupBox Header="Imagens">
+                    <Fluent:Button Header="Selecionar Imagens"
+                              Command="{Binding SelecionarImagensCommand}"/>
+                    
+                    <Fluent:Button Header="Limpar Lista"
+                              Command="{Binding LimparListaCommand}"/>
+
+                    <Fluent:Button Header="Adicionar à Folha"
+                              Command="{Binding AdicionarImagemFolhaCommand}"
+                              CommandParameter="{Binding ElementName=ListViewImagens, Path=SelectedItem}"/>
+                </Fluent:RibbonGroupBox>
+
+                <Fluent:RibbonGroupBox Header="Folha">
+                    <Fluent:Button Header="Gerar Folha"
+                              Command="{Binding GerarFolhaCommand}"/>
+
+                    <Fluent:Button Header="Distribuir Imagens na Folha"
+                              Command="{Binding DistribuirImagensFolhaCommand}"/>
+                    
+                    <Fluent:Button Header="Remover da Folha"
+                              Command="{Binding RemoverImagemFolhaCommand}"
+                              CommandParameter="{Binding ElementName=ImagensFolhaGrid, Path=SelectedItem}"/>
+
+                    <Fluent:Button Header="Rotacionar"
+                              Command="{Binding RotacionarImagemCommand}"
+                              CommandParameter="{Binding ElementName=ListViewImagens, Path=SelectedItem}"/>
+
+                    <Fluent:Button Header="Salvar Folha TIFF"
+                              Command="{Binding SalvarFolhaTIFFCommand}"/>
+
+                    <Fluent:Button Header="Salvar Folha PNG"
+                              Command="{Binding SalvarFolhaPNGCommand}"/>
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+        </Fluent:Ribbon>
+
+        <!-- Área principal da aplicação -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="600"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Lista de imagens -->
+            <Border Grid.Column="0" BorderBrush="Gray" BorderThickness="1" Margin="5">
+                <ListView x:Name="ListViewImagens" 
+                         ItemsSource="{Binding Imagens}" 
+                         Margin="5"
+                         SelectionMode="Single"
+                         AllowDrop="True"
+                         Drop="ListViewImagens_Drop">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Seleção">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox IsChecked="{Binding Selecionada, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <GridViewColumn Header="Miniatura">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Image Source="{Binding CaminhoCompleto}" Width="50" Height="50" Stretch="Uniform"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <GridViewColumn Header="Nome" DisplayMemberBinding="{Binding NomeArquivo}"/>
+                            <GridViewColumn Header="Quantidade">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding Quantidade, Mode=TwoWay}" Width="50"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Largura (cm)" DisplayMemberBinding="{Binding LarguraCm}"/>
+                            <GridViewColumn Header="Altura (cm)" DisplayMemberBinding="{Binding AlturaCm}"/>
+                            <GridViewColumn Header="DPI" DisplayMemberBinding="{Binding DPI}"/>
+
+                            <GridViewColumn Header="Ações">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Content="✕" 
+                                                    Command="{Binding DataContext.RemoverImagemCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                    CommandParameter="{Binding}" 
+                                                    Margin="2"
+                                                    Width="24"
+                                                    Height="24"
+                                                    FontWeight="Bold"
+                                                    Background="Red"
+                                                    Foreground="White"
+                                                    BorderThickness="0"/>
+                                            <Button Content="Adicionar à Folha" 
+                                                    Command="{Binding DataContext.AdicionarImagemFolhaCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                    CommandParameter="{Binding}" 
+                                                    Margin="2"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Border>
+
+            <!-- Visualização prévia -->
+            <ScrollViewer Grid.Column="1" Background="#444444" BorderBrush="Gray" BorderThickness="1" Margin="5" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Controles de Zoom -->
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+                        <Button Content="-" Command="{Binding ZoomOutCommand}" Margin="2" Width="30"/>
+                        <TextBlock Text="{Binding ZoomLevel, StringFormat='{}{0}%'}" VerticalAlignment="Center" Margin="5,0"/>
+                        <Button Content="+" Command="{Binding ZoomInCommand}" Margin="2" Width="30"/>
+                        <Button Content="Ajustar" Command="{Binding FitToScreenCommand}" Margin="2"/>
+                    </StackPanel>
+
+                    <Grid x:Name="PreviewGrid" Grid.Row="1" Width="{Binding PreviewWidth}">
+                        <Border Background="#666666">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="2" />
+                            </Border.Effect>
+
+                            <!-- Grade de fundo estilo Photoshop -->
+                            <Rectangle Fill="#999999">
+                                <Rectangle.OpacityMask>
+                                    <VisualBrush Viewport="0,0,10,10" ViewportUnits="Absolute" TileMode="Tile">
+                                        <VisualBrush.Visual>
+                                            <Grid Width="10" Height="10">
+                                                <Rectangle Fill="#999999" Width="5" Height="5" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                                <Rectangle Fill="#999999" Width="5" Height="5" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+                                            </Grid>
+                                        </VisualBrush.Visual>
+                                    </VisualBrush>
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                        </Border>
+
+                        <Canvas x:Name="PreviewCanvas">
+                            <!-- Imagens serão adicionadas aqui dinamicamente -->
+                        </Canvas>
+                    </Grid>
+
+                    <!-- Espaço final -->
+                    <StackPanel Grid.Row="2" Height="10"></StackPanel>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+
+    </DockPanel>
+</Fluent:RibbonWindow>
